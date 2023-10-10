@@ -303,3 +303,40 @@ SELECT * FROM T6_Book_Copies;
 		('20','Mark Lee');
 
 SELECT * FROM T7_Book_Authors;
+
+
+
+/* =================== STORED PROCEDURE QUERY QUESTIONS =================================== */
+
+/* #1- How many copies of the book titled "The Lost Tribe" are owned by the library branch whose name is "Sharpstown"? */
+
+CREATE OR REPLACE FUNCTION book_copies_at_all_sharpstown(
+    book_title VARCHAR(70) DEFAULT 'The Lost Tribe',
+    branch_name VARCHAR(70) DEFAULT 'Sharpstown'
+)
+RETURNS TABLE (
+    branch_id INT,
+    branch_name VARCHAR(70),
+    number_of_copies INT,
+    book_title VARCHAR(70)
+)
+AS 
+BEGIN
+    RETURN QUERY
+    SELECT 
+        bc.BookCopies_BranchID AS branch_id,
+        lb.LibraryBranch_Name AS branch_name,
+        bc.BookCopies_No_Of_Copies AS number_of_copies,
+        b.BookTitle AS book_title
+    FROM 
+        T6_Book_Copies AS bc
+    INNER JOIN 
+        T2_Book AS b ON bc.BookCopies_BranchID = b.BookID
+    INNER JOIN 
+        T3_Library_Branch AS lb ON bc.BookCopies_BranchID = lb.LibraryBranch_ID
+    WHERE 
+        b.BookTitle = book_title AND lb.LibraryBranch_Name = branch_name;
+END;
+
+
+
