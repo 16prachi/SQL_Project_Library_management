@@ -367,3 +367,24 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+/* #3- Retrieve the names of all borrowers who do not have any books checked out. */
+CREATE OR REPLACE FUNCTION no_loans()
+RETURNS TABLE (
+    borrower_name VARCHAR(70)
+)
+AS $$
+DECLARE
+    Borrower_CardNo  INT;
+BEGIN
+    RETURN QUERY
+    SELECT
+        b.Borrower_Name
+    FROM
+        T4_Borrower AS b
+    WHERE NOT EXISTS (
+        SELECT 1
+        FROM T5_Book_Loans AS bl
+        WHERE bl.BookLoans_CardNo = b.Borrower_CardNo
+    );
+END;
+$$ LANGUAGE plpgsql;
