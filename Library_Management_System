@@ -388,3 +388,7 @@ BEGIN
     );
 END;
 $$ LANGUAGE plpgsql;
+
+/* #4- For each book that is loaned out from the "Sharpstown" branch and whose DueDate is today, retrieve the book title, the borrower's name, and the borrower's address.  */
+
+
